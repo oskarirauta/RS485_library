@@ -76,7 +76,7 @@ class RS485 : public Print {
   uint16 blockSize;
   
   RS485(uint8 ser=1, uint8 rtsPin = 9);
-  void begin(uint32 baud = 115200);
+  void begin(uint32 baud = 115200, uint8 phoneNo = RS485_DEFAULT_PHONENO);
   void end(void);
 
   uint32 available(void);
@@ -98,4 +98,6 @@ class RS485 : public Print {
         
         
         
+        
+
         

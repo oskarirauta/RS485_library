@@ -71,7 +71,7 @@ void RS485::waitForSend(void) {
   }
 }
 
-void RS485::begin(uint32 baud) {
+void RS485::begin(uint32 baud, uint8 phoneNo) {
   pinMode(_rts, OUTPUT);
   digitalWrite(_rts, LOW);
   
@@ -83,7 +83,7 @@ void RS485::begin(uint32 baud) {
   conState = 0;
   receivedChecksum = 0;
   connected = false;
-  phoneNO = RS485_DEFAULT_PHONENO;
+  phoneNO = phoneNo;
   blockSize = RS485_DEFAULT_BLOCKSIZE;
 }
 
@@ -150,7 +150,8 @@ boolean RS485::received(void) {
     if ( rs485checksumByte(receivedCom) == receivedChecksum )
       return parseCommand();
     else 
-      outputMSG((char *)"ERR");
+      if ( connected )
+      	outputMSG((char *)"ERR");
   }
       
   return false;
@@ -263,3 +264,4 @@ boolean RS485::parseCommand(void) {
 char *RS485::command() {
   return receivedCom;
 }
+        
