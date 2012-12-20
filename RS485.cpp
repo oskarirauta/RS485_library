@@ -85,6 +85,7 @@ void RS485::begin(uint32 baud, uint8 phoneNo) {
   connected = false;
   phoneNO = phoneNo;
   blockSize = RS485_DEFAULT_BLOCKSIZE;
+  outgoingTimer = 0;
 }
 
 void RS485::end(void) {
@@ -108,6 +109,12 @@ void RS485::write(unsigned char ch) {
 }
 
 boolean RS485::received(void) {
+  
+  if ( outgoingTimer > 0 ) {
+    sendBuf();
+    return false;
+  }
+  
   if ( ! hwSerial -> available() )
     return false;
   
@@ -157,28 +164,35 @@ boolean RS485::received(void) {
   return false;
 }
 
-void RS485::outputMSG(char *MSG, const boolean withoutChecksum) {
-
-  if ( RS485_COMMAND_DELAY > 0 )
-    delayMicroseconds(RS485_COMMAND_DELAY);
+void RS485::sendBuf(void) {
+  if ( outgoingTimer + RS485_COMMAND_DELAY > micros() )
+    return;
   
   while ( hwSerial -> available() > 0 )
     hwSerial -> read();
-  
-  if ( withoutChecksum ) {
-    digitalWrite(_rts, HIGH);
-    hwSerial -> print(MSG);
-    waitForSend();
-    digitalWrite(_rts, LOW);
-    return;
-  }
-  
-  char outputSTR[strlen(MSG)+15];
-  sprintf(outputSTR,"%s((%d))\r\n", MSG, rs485checksumByte(MSG));
-  digitalWrite(_rts, HIGH);
-  hwSerial -> print(outputSTR);
+
   waitForSend();
+  digitalWrite(_rts, HIGH);
+  hwSerial -> print(outgoingBuffer);
   digitalWrite(_rts, LOW);
+
+  free(outgoingBuffer);
+  outgoingTimer = 0;
+}
+
+void RS485::outputMSG(char *MSG, const boolean withoutChecksum) {
+
+  while ( outgoingTimer > 0 ) // Clear buffer out of the way..
+    sendBuf();
+  
+  outgoingBuffer = (char *)malloc(strlen(MSG) + 12);
+  
+  if ( withoutChecksum)
+    strcpy(outgoingBuffer, MSG);
+  else
+  	sprintf(outgoingBuffer, "%s((%d))\r\n", MSG, rs485checksumByte(MSG));
+  
+  outgoingTimer = micros();
 } 
 
 boolean RS485::parseCommand(void) {
@@ -264,4 +278,5 @@ boolean RS485::parseCommand(void) {
 char *RS485::command() {
   return receivedCom;
 }
+        
         

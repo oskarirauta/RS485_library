@@ -1,6 +1,10 @@
 #ifndef RS485_H
 #define RS485_H
 
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+  
 #if ARDUINO >= 100
  #include "Arduino.h"
 #elif defined(__ARM3X8E__)
@@ -8,9 +12,6 @@
 #else
  #include "WProgram.h"
 #endif
-
-#include <string.h>
-#include <stdio.h>
   
 #ifndef RS485_SETTLETIME
 #define RS485_SETTLETIME 1200
@@ -67,9 +68,11 @@ class RS485 : public Print {
   uint8 chCue[4], conState, receivedChecksum;
   uint32 connected;
   char receivedCom[RS485_COMMANDSIZE];
+  char *outgoingBuffer;
+  uint32 outgoingTimer;
   
   boolean parseCommand(void);
-
+  void sendBuf(void);
 
  public:
   uint8 phoneNO;
@@ -92,12 +95,3 @@ class RS485 : public Print {
 };
 #endif
   
-        
-        
-        
-        
-        
-        
-        
-
-        
