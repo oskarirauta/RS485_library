@@ -1,5 +1,6 @@
 This is a rs485 device and protocol library. Atleast Maple is supported. Possibly AVR.
 Written by Oskari Rauta.
+License: expat ( check copying.txt )
 
 In MasterTest folder is a pc program for testing. Install rs485 dongle to mac and compile
 master. Install rs485 module to Serial1 and connect rts to pin9. Upload provided example
