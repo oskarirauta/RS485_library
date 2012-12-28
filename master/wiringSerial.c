@@ -94,7 +94,8 @@ int serialOpen (char *device, int baud)
 
     options.c_cc [VMIN]  =   0 ;
 //    options.c_cc [VTIME] = 100 ;	// Ten seconds (100 deciseconds)
-    options.c_cc [VTIME] = 25 ;
+//    options.c_cc [VTIME] = 25 ;
+	options.c_cc [VTIME] = 35;
 
   tcsetattr (fd, TCSANOW | TCSAFLUSH, &options) ;
 
