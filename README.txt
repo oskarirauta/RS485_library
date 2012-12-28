@@ -14,3 +14,20 @@ and then server sets their phone numbers. Master does not handle any relay board
 does exactly what I described for one device.
 
 To download: click the DOWNLOADS button in the top right corner, rename the uncompressed folder RS485_library. Check that the folder contains RS485.cpp and RS485.h. Place the library folder your <maplesketchfolder>/libraries/ folder. You may need to create the libraries subfolder if its your first library. Restart the IDE. Connect rs485 module to serial1 and it's RTS to pin9.
+
+---
+
+Some features:
+ - easy to add user defined commands to protocol
+ - file download
+ - file upload
+ - support for checksum and timeout errors (software error correction)
+
+wiring_serial needed by master is from wiringPI(c) project.
+
+Forks welcome :)
+
+---
+
+in master directory you will find a library for master device (pc?)
+and benchmark.cpp that can be used for testing with benchmark example..
