@@ -25,7 +25,7 @@ Some features:
 
 wiring_serial needed by master is from wiringPI(c) project.
 
-Forks welcome :)
+Forks / Pull requests very welcome, wrote this in a bit of a hurry, so there might be some issues I haven't noticed.. :)
 
 ---
 
